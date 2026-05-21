@@ -8,8 +8,8 @@ import { marked } from "marked";
 const QUICK_PROMPTS = [
   "My ice maker isn't working",
   "Find dishwasher door latch parts",
-  "Check part compatibility",
-  "How do I install PS11752778?",
+  "Is PS11765620 compatible with model 10672002011?",
+  "How do I install PS11765620?",
 ];
 
 function ProductCard({ part }: { part: Product }) {
