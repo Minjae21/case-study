@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --ps-red: #e31837;
+  --ps-red-dark: #b81229;
+  --ps-navy: #1b3875;
+  --ps-navy-light: #2a4d9e;
+  --ps-gray-bg: #f5f5f5;
+  --ps-gray-border: #e0e0e0;
+  --ps-text: #212121;
+  --ps-text-muted: #757575;
+  --header-h: 62px;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+}
+
+.App {
+  background-color: #fff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ─────────────────────────────────── */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-h);
+  background: #fff;
+  border-bottom: 2px solid var(--ps-red);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.header-inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-ps {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ps-red);
+  letter-spacing: -0.5px;
+}
+
+.logo-select {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ps-navy);
+  letter-spacing: -0.5px;
+}
+
+.header-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--ps-gray-border);
+}
+
+.header-subtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ps-text-muted);
+}
+
+.header-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ps-red);
+  background: #fdeaed;
+  border: 1px solid #f5c0c9;
+  border-radius: 20px;
+  padding: 3px 10px;
+  letter-spacing: 0.2px;
+}

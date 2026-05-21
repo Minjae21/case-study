@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# PartSelect Chat Agent
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An AI-powered chat assistant for the [PartSelect](https://www.partselect.com) e-commerce platform, scoped to **refrigerator and dishwasher parts**. Users can find parts, check appliance compatibility, get installation guidance, and troubleshoot appliance problems — all through a conversational interface.
 
-## Available Scripts
+## Repository Structure
 
-In the project directory, you can run:
+```
+case-study/
+├── frontend/          # Next.js 16 chat UI (App Router, TypeScript)
+├── backend/           # FastAPI agent server (Python)
+│   ├── app/
+│   │   ├── agent.py           # Gemini tool-calling loop
+│   │   ├── main.py            # FastAPI endpoints
+│   │   ├── db.py              # ChromaDB collections
+│   │   ├── embeddings.py      # Gemini embedding function
+│   │   ├── tools/             # Four agent tools
+│   │   └── data/              # Scraper + ingest pipeline
+│   └── tests/                 # 53 unit tests (pytest)
+└── docs/              # Architecture and design decisions
+```
 
-### `npm start`
+## Quick Start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Backend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+cd backend
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env           # add your GOOGLE_API_KEY
+uvicorn app.main:app --reload --port 8000
+```
 
-### `npm test`
+### Frontend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+cd frontend
+npm install
+cp .env.local.example .env.local
+npm run dev
+```
 
-### `npm run build`
+### Run Tests
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd backend && source venv/bin/activate
+pip install pytest httpx
+pytest tests/ -v
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Data Pipeline (one-time setup)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`chroma_db/` and `data/raw/*.json` are committed to the repo so the project runs without any rebuild step. In production these would be excluded from version control and rebuilt via a scheduled pipeline — see [docs/data-pipeline.md](docs/data-pipeline.md) for that discussion.
 
-### `npm run eject`
+To rebuild from scratch:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+cd backend && source venv/bin/activate
+python -m app.data.scraper   # scrapes PartSelect → data/raw/*.json  (requires display for Playwright)
+python -m app.data.ingest    # embeds and loads into chroma_db/       (takes ~10 min, burns API quota)
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Documentation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Architecture Overview](docs/architecture.md) — system design, data flow, agentic loop
+- [Design Decisions](docs/design-decisions.md) — every major technology choice and why
+- [Scalability](docs/scalability.md) — how to scale this to production
+- [Data Pipeline](docs/data-pipeline.md) — scraping, chunking, and embedding strategy
